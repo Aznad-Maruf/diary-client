@@ -1,0 +1,21 @@
+.note-input {
+    margin-bottom: 20px;
+  }
+  
+  .note-input textarea {
+    width: 80%;
+    height: 100px;
+    margin-bottom: 10px;
+  }
+  
+  .note-input button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .note-input button:hover {
+    background-color: #45a049;
+  }

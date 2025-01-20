@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import DiaryEntryForm from './components/DiaryEntryForm';
+import DiaryEntryList from './components/DiaryEntryList';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+    <div>
+      <header className="bg-primary text-white text-center py-3">
+        <h1>Diary App</h1>
       </header>
+      <main>
+        <DiaryEntryForm />
+        <DiaryEntryList />
+      </main>
     </div>
   );
-}
+};
 
 export default App;
