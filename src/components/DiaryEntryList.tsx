@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getEntries } from '../api/diaryService';
-
-interface DiaryEntry {
-  id?: string;
-  title: string;
-  content: string;
-  tags?: string[];
-  date: string;
-  deleted: boolean;
-}
+import { DiaryEntry } from '../types/DiaryEntry';
+import { formatDate } from '../utils';
 
 const DiaryEntryList: React.FC = () => {
   const [entries, setEntries] = useState<DiaryEntry[]>([]);
@@ -28,22 +22,28 @@ const DiaryEntryList: React.FC = () => {
 
   return (
     <div className="container my-4">
-      <h2 className="mb-4">Diary Entries</h2>
+      <h2 className="mb-4 text-center">Diary Entries</h2>
       <div className="row">
         {entries.map((entry) => (
           <div key={entry.id} className="col-md-4 mb-4">
-            <div className="card h-100">
-              <div className="card-body">
-                <h5 className="card-title">{entry.title}</h5>
-                <p className="card-text">{entry.content}</p>
-                <p className="card-text">
-                  <strong>Tags:</strong> {entry.tags?.join(', ') || 'No tags'}
-                </p>
-                <p className="card-text">
-                  <strong>Date:</strong> {new Date(entry.date).toLocaleString()}
-                </p>
+            <Link to={`/view/${entry.id}`} state={{ entry }} className="text-decoration-none">
+              <div className="card h-100">
+                <div className="card-body d-flex flex-column">
+                  <div className="d-flex justify-content-between align-items-center">
+                    <h5 className="card-title text-center">{entry.title}</h5>
+                    <small className="text-muted">
+                      {formatDate(entry.date)}
+                      </small>
+                  </div>
+                  <small className="text-muted">
+                    {entry.tags?.join(', ') || 'No tags'}
+                  </small>
+                  <div className="mt-auto text-center">
+                    <p className="card-text mt-3">{entry.content}</p>
+                  </div>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         ))}
       </div>

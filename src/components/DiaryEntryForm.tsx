@@ -1,88 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getTags } from '../api/tagService';
 import { createEntry } from '../api/diaryService';
 
-interface DiaryEntry {
-    id?: string;
-    title: string;
-    content: string;
-    tags: string[];
-    date: string;
-    deleted: boolean;
-  }
-
 const DiaryEntryForm: React.FC = () => {
-  const [form, setForm] = useState<DiaryEntry>({
-    title: '',
-    content: '',
-    tags: [],
-    date: new Date().toISOString(),
-    deleted: false,
-  });
+  const [tags, setTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [content, setContent] = useState('');
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
-  };
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const data = await getTags();
+        setTags(data.map(tag => tag.name)); // Assuming 'name' is the string representation of the tag
+      } catch (error) {
+        console.error('Failed to fetch tags:', error);
+      }
+    };
 
-  const handleTagChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, tags: e.target.value.split(',').map((tag) => tag.trim()) });
+    fetchTags();
+  }, []);
+
+  const handleTagClick = (tag: string) => {
+    setSelectedTags((prevSelectedTags) =>
+      prevSelectedTags.includes(tag)
+        ? prevSelectedTags.filter((t) => t !== tag)
+        : [...prevSelectedTags, tag]
+    );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createEntry(form);
-      setForm({ title: '', content: '', tags: [], date: new Date().toISOString(), deleted: false });
-      setForm({ title: '', content: '', tags: [], date: new Date().toISOString(), deleted: false });
+      const entry = { tags: selectedTags, content };
+      
+      const createdEntry = await createEntry(entry);
+      navigate(`/view/${createdEntry.id}`, { state: { entry: createdEntry } });
     } catch (error) {
       console.error('Failed to create entry:', error);
     }
   };
 
   return (
-    <div className="container my-4">
-      <h2 className="mb-4">Create New Diary Entry</h2>
-      <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
+      <div className="form-group">
+        <label>Tags</label>
         <div className="mb-3">
-          <label htmlFor="title" className="form-label">Title:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            className="form-control"
-            value={form.title}
-            onChange={handleChange}
-            required
-          />
+          {tags.map((tag) => (
+            <button
+              type="button"
+              key={tag}
+              className={`btn btn-outline-primary m-1 ${selectedTags.includes(tag) ? 'active' : ''}`}
+              onClick={() => handleTagClick(tag)}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
-        <div className="mb-3">
-          <label htmlFor="content" className="form-label">Content:</label>
-          <textarea
-            id="content"
-            name="content"
-            className="form-control"
-            rows={4}
-            value={form.content}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div className="mb-3">
-          <label htmlFor="tags" className="form-label">Tags (comma-separated):</label>
-          <input
-            type="text"
-            id="tags"
-            name="tags"
-            className="form-control"
-            value={form.tags.join(', ')}
-            onChange={handleTagChange}
-          />
-        </div>
-        <div className='d-flex justify-content-end'>
-            <button type="submit" className="btn btn-primary">Create Entry</button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div className="form-group">
+        <label htmlFor="content">Content</label>
+        <textarea
+          required
+          rows={8}
+          className="form-control"
+          id="content"
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+      </div>
+      <button type="submit" className="btn btn-primary mt-3">Submit</button>
+    </form>
   );
 };
 

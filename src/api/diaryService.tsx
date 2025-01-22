@@ -1,16 +1,9 @@
 import axios, { AxiosResponse } from 'axios';
+import { DiaryEntry } from '../types/DiaryEntry';
 
 const API_URL = 'http://localhost:8080/entries'; // Replace with your backend URL if different
 
 // Define the DiaryEntry interface based on the Java model
-interface DiaryEntry {
-  id?: string;
-  title: string;
-  content: string;
-  tags: string[];
-  date: string;  // Date is typically a string in API responses, format should be handled on the backend
-  deleted: boolean;
-}
 
 export const createEntry = async (entry: DiaryEntry): Promise<DiaryEntry> => {
   const response: AxiosResponse<DiaryEntry> = await axios.post(API_URL, entry);

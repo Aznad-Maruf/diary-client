@@ -1,18 +1,41 @@
 import React from 'react';
-import DiaryEntryForm from './components/DiaryEntryForm';
-import DiaryEntryList from './components/DiaryEntryList';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import DiaryEntryFormPage from './pages/DiaryEntryFormPage';
+import DiaryEntryListPage from './pages/DiaryEntryListPage';
+import DiaryEntryViewPage from './pages/DiaryEntryViewPage';
+import Navbar from './components/Navbar';
+import './App.css';
+import Tags from './components/Tags';
 
 const App: React.FC = () => {
   return (
-    <div>
-      <header className="bg-primary text-white text-center py-3">
-        <h1>Diary App</h1>
-      </header>
-      <main>
-        <DiaryEntryForm />
-        <DiaryEntryList />
-      </main>
-    </div>
+    <Router>
+      <div className="container">
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/form" element={<DiaryEntryFormPage />} />
+            <Route path="/list" element={<DiaryEntryListPage />} />
+            <Route path="/view/:id" element={<DiaryEntryViewPage />} />
+            <Route path="/tags" element={<Tags />} />
+            <Route path="/" element={
+              <>
+                <h2>Welcome to the Diary App</h2>
+                <p>Please navigate to the diary entry form or list.</p>
+                <div>
+                  <Link to="/form">
+                    <button className="btn btn-primary m-2">Add Entry</button>
+                  </Link>
+                  <Link to="/list">
+                    <button className="btn btn-secondary m-2">Show List</button>
+                  </Link>
+                </div>
+              </>
+            } />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 };
 
