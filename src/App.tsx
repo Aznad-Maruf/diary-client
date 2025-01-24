@@ -6,6 +6,7 @@ import DiaryEntryViewPage from './pages/DiaryEntryViewPage';
 import Navbar from './components/Navbar';
 import './App.css';
 import Tags from './components/Tags';
+import DiaryEntryEditPage from './pages/DiaryEntryEditPage';
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
             <Route path="/form" element={<DiaryEntryFormPage />} />
             <Route path="/list" element={<DiaryEntryListPage />} />
             <Route path="/view/:id" element={<DiaryEntryViewPage />} />
+            <Route path="/edit/:id" element={<DiaryEntryEditPage />} />
             <Route path="/tags" element={<Tags />} />
             <Route path="/" element={
               <>
