@@ -4,6 +4,9 @@ import { getTags } from "../api/tagService";
 import { createEntry, updateEntry } from "../api/diaryService";
 import { DiaryEntry } from "../types/DiaryEntry";
 
+import "react-quill/dist/quill.snow.css"; // Import the CSS for Quill
+import ReactQuill from "react-quill";
+
 interface DiaryEntryFormProps {
   entry?: DiaryEntry;
 }
@@ -54,7 +57,7 @@ const DiaryEntryForm: React.FC<DiaryEntryFormProps> = ({ entry }) => {
       const entryData = {
         title,
         tags: selectedTags,
-        content: contentRef.current?.innerHTML || "",
+        content: content,
       };
       if (entry) {
         if (entry.id) {
@@ -101,34 +104,6 @@ const DiaryEntryForm: React.FC<DiaryEntryFormProps> = ({ entry }) => {
 
           <div className="d-flex align-items-center">
             <button
-              type="button"
-              className="btn btn-secondary btn-sm me-2"
-              onClick={() => applyStyle("bold")}
-            >
-              <i className="bi bi-type-bold"></i>
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm me-2"
-              onClick={() => applyStyle("italic")}
-            >
-              <i className="bi bi-type-italic"></i>
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm me-2"
-              onClick={() => applyStyle("underline")}
-            >
-              <i className="bi bi-type-underline"></i>
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary btn-sm me-2"
-              onClick={() => applyStyle("foreColor", "red")}
-            >
-              <i className="bi bi-palette"></i>
-            </button>
-            <button
               type="submit"
               className="btn btn-primary btn-sm"
               onClick={handleSubmit}
@@ -165,32 +140,17 @@ const DiaryEntryForm: React.FC<DiaryEntryFormProps> = ({ entry }) => {
             <input
               type="text"
               className="form-control mb-3 text-center text-muted"
-              placeholder="Title"
+              placeholder="How was your day?"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               style={{ fontSize: "1.25rem" }}
             />
-            <div
-              ref={contentRef}
-              contentEditable
-              className="form-control input-group"
-              style={{
-                resize: "none",
-                width: "100%",
-                height: "calc(100vh - 250px)",
-                overflow: "auto",
-                border: "1px solid #ced4da",
-                padding: "10px",
-                whiteSpace: "pre-wrap",
-              }}
-              onInput={(e) => setContent(e.currentTarget.innerHTML)}
-              suppressContentEditableWarning={true}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  document.execCommand("insertHTML", false, "<br>");
-                }
-              }}
+
+            <ReactQuill
+              theme="snow"
+              value={content}
+              onChange={setContent}
+              placeholder="Write something amazing..."
             />
           </div>
         </div>

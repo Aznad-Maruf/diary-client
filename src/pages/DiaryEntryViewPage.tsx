@@ -97,10 +97,7 @@ const DiaryEntryViewPage: React.FC = () => {
         </div>
 
         <div className="card-body d-flex flex-column">
-          <div
-            className="mt-auto text-left"
-            style={{ height: "calc(100vh - 300px)" }}
-          >
+          <div className="mt-auto text-left">
             <div dangerouslySetInnerHTML={{ __html: entry.content }}></div>
           </div>
         </div>
